@@ -28,5 +28,3 @@ logstash_service:
     - enable: True
     - require:
       - pkg: logstash_soft
-    - watch:
-      - file: /etc/logstash/conf.d/*
