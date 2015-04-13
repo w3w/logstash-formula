@@ -1,9 +1,9 @@
 logstash_repos_key:
   file.managed:
-    - name: {{ repo_key_file }}
+    - name: {{ pillar.logstash.repo_key_file }}
     - source: salt://logstash/files/repo.key
   cmd.run:
-    - name: cat {{ repo_key_file }} | apt-key add -
+    - name: cat {{ pillar.logstash.repo_key_file }} | apt-key add -
     - unless: apt-key list | grep dotdeb.org
     - require:
       - file: logstash_repos_key
@@ -13,7 +13,7 @@ logstash_repo:
     - name: /etc/apt/sources.list.d/logstash.list
     - require:
       - cmd: logstash_repos_key
-    - contents: deb {{ logstash_repo_loc }} stable main
+    - contents: deb {{ pillar.logstash.repo_loc }} stable main
 
 logstash_soft:
   pkg.installed:
