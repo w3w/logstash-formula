@@ -44,7 +44,7 @@ logstash_pattern_{{ pattern.name }}:
     - service: logstash
 {% endfor %}
 
-{% for item in pillar.logstash-inputs %}
+{% for item in pillar.logstash_inputs %}
 logstash_pattern_{{ item.name }}:
   file.managed:
   - name: /etc/logstash/conf.d/{{ item.name }}
@@ -56,7 +56,7 @@ logstash_pattern_{{ item.name }}:
       - service: logstash
 {% endfor %}
 
-{% for item in pillar.logstash-filters %}
+{% for item in pillar.logstash_filters %}
 logstash_pattern_{{ item.name }}:
   file.managed:
   - name: /etc/logstash/conf.d/{{ item.name }}
@@ -68,7 +68,7 @@ logstash_pattern_{{ item.name }}:
       - service: logstash
 {% endfor %}
 
-{% for item in pillar.logstash-outputs %}
+{% for item in pillar.logstash_outputs %}
 logstash_pattern_{{ item.name }}:
   file.managed:
   - name: /etc/logstash/conf.d/{{ item.name }}
