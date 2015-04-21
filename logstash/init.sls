@@ -4,7 +4,7 @@ logstash_repos_key:
     - source: salt://logstash/files/repo.key
   cmd.run:
     - name: cat {{ pillar.logstash.repo_key_file }} | apt-key add -
-    - unless: apt-key list | grep dotdeb.org
+    - unless: apt-key list | grep 2048R/D88E42B4
     - require:
       - file: logstash_repos_key
 
