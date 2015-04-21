@@ -28,3 +28,4 @@ logstash_service:
     - enable: True
     - require:
       - pkg: logstash_soft
+      - service: elasticsearch
