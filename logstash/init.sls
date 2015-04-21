@@ -29,3 +29,53 @@ logstash_service:
     - require:
       - pkg: logstash_soft
       - service: elasticsearch
+
+# custom patterns
+
+{% for pattern in pillar.logstash.patterns %}
+logstash_pattern_{{ pattern.name }}:
+  file.managed:
+  - name: /opt/logstash/patterns/{{ pattern.name }}
+  - source: {{ pattern.source }}
+  - template: jinja
+  - user: logstash
+  - group: logstash
+  - watch_in:
+    - service: logstash
+{% endfor %}
+
+{% for item in pillar.logstash-inputs %}
+logstash_pattern_{{ item.name }}:
+  file.managed:
+  - name: /etc/logstash/conf.d/{{ item.name }}
+  - source: {{ item.source }}
+  - template: jinja
+  - user: logstash
+  - group: logstash
+  - watch_in:
+      - service: logstash
+{% endfor %}
+
+{% for item in pillar.logstash-filters %}
+logstash_pattern_{{ item.name }}:
+  file.managed:
+  - name: /etc/logstash/conf.d/{{ item.name }}
+  - source: {{ item.source }}
+  - template: jinja
+  - user: logstash
+  - group: logstash
+  - watch_in:
+      - service: logstash
+{% endfor %}
+
+{% for item in pillar.logstash-outputs %}
+logstash_pattern_{{ item.name }}:
+  file.managed:
+  - name: /etc/logstash/conf.d/{{ item.name }}
+  - source: {{ item.source }}
+  - template: jinja
+  - user: logstash
+  - group: logstash
+  - watch_in:
+      - service: logstash
+{% endfor %}
