@@ -79,3 +79,9 @@ logstash_pattern_{{ item.name }}:
   - watch_in:
       - service: logstash
 {% endfor %}
+
+logstash-config-check:
+  cmd.run:
+  - name: "/opt/logstash/bin/logstash -f /etc/logstash/conf.d/ --configtest"
+  - watch_in:
+    - service: logstash_service
