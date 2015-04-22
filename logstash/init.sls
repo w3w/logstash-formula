@@ -42,6 +42,7 @@ logstash_pattern_{{ pattern.name }}:
   - group: logstash
   - watch_in:
     - service: logstash
+    - cmd: logstash-config-check
 {% endfor %}
 
 {% for item in pillar.logstash_inputs %}
@@ -54,6 +55,7 @@ logstash_pattern_{{ item.name }}:
   - group: logstash
   - watch_in:
       - service: logstash
+      - cmd: logstash-config-check
 {% endfor %}
 
 {% for item in pillar.logstash_filters %}
@@ -66,6 +68,8 @@ logstash_pattern_{{ item.name }}:
   - group: logstash
   - watch_in:
       - service: logstash
+      - cmd: logstash-config-check
+
 {% endfor %}
 
 {% for item in pillar.logstash_outputs %}
@@ -78,6 +82,7 @@ logstash_pattern_{{ item.name }}:
   - group: logstash
   - watch_in:
       - service: logstash
+      - cmd: logstash-config-check
 {% endfor %}
 
 logstash-config-check:
