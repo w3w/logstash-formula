@@ -18,7 +18,6 @@ logstash_repo:
 logstash_soft:
   pkg.installed:
     - name: logstash
-    - refresh: True
     - require:
       - file: logstash_repo
 
@@ -41,8 +40,7 @@ logstash_pattern_{{ pattern.name }}:
   - user: logstash
   - group: logstash
   - watch_in:
-    - service: logstash
-    - cmd: logstash-config-check
+    - service: logstash_service
 {% endfor %}
 
 {% for item in pillar.logstash_inputs %}
@@ -54,8 +52,7 @@ logstash_pattern_{{ item.name }}:
   - user: logstash
   - group: logstash
   - watch_in:
-      - service: logstash
-      - cmd: logstash-config-check
+      - service: logstash_service
 {% endfor %}
 
 {% for item in pillar.logstash_filters %}
@@ -67,8 +64,7 @@ logstash_pattern_{{ item.name }}:
   - user: logstash
   - group: logstash
   - watch_in:
-      - service: logstash
-      - cmd: logstash-config-check
+      - service: logstash_service
 
 {% endfor %}
 
@@ -81,12 +77,5 @@ logstash_pattern_{{ item.name }}:
   - user: logstash
   - group: logstash
   - watch_in:
-      - service: logstash
-      - cmd: logstash-config-check
+      - service: logstash_service
 {% endfor %}
-
-logstash-config-check:
-  cmd.run:
-  - name: "/opt/logstash/bin/logstash -f /etc/logstash/conf.d/ --configtest"
-  - watch_in:
-    - service: logstash_service
