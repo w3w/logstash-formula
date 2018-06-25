@@ -1,25 +1,23 @@
+{%- set config = salt['pillar.get']('logstash', {}) -%}
+#key file is not used anymore
+{% if config.get('repo_key_file', false) %}
 logstash_repos_key:
-  file.managed:
-    - name: {{ pillar.logstash.repo_key_file }}
-    - source: salt://logstash/files/repo.key
-  cmd.run:
-    - name: cat {{ pillar.logstash.repo_key_file }} | apt-key add -
-    - unless: apt-key list | grep 2048R/D88E42B4
-    - require:
-      - file: logstash_repos_key
+  file.absent:
+    - name: {{ config.repo_key_file }}
+{% endif %}
 
 logstash_repo:
-  file.managed:
-    - name: /etc/apt/sources.list.d/logstash.list
-    - contents: deb {{ pillar.logstash.repo_loc }} stable main
-    - require:
-      - cmd: logstash_repos_key
+  pkgrepo.managed:
+    - file: /etc/apt/sources.list.d/logstash.list
+    - name: 'deb {{ config.repo_loc }} stable main'
+    - clean_file: True
+    - key_url: {{ config.get('repo_key_url', 'https://artifacts.elastic.co/GPG-KEY-elasticsearch') }}
 
 logstash_soft:
   pkg.installed:
     - name: logstash
     - require:
-      - file: logstash_repo
+      - pkgrepo: logstash_repo
 
 logstash_service:
   service.running:
